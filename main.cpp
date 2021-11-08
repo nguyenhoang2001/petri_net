@@ -34,7 +34,7 @@ void print_reachable_marking(int *places, int size_places, transition *trans, in
             }
             for (int j = 0; j < trans[i].output.size(); j++)
             {
-                save_places[trans[i].output[j]] = 1;
+                save_places[trans[i].output[j]] += 1;
             }
         }
         cout << "Reachable marking from firing transition[" << i << "]: [ ";
@@ -48,8 +48,8 @@ void print_reachable_marking(int *places, int size_places, transition *trans, in
             }
         }
         cout << " ]" << endl;
-        for (int j = 0; j < size_places; j++)
-            save_places[j] = places[j];
+        // for (int j = 0; j < size_places; j++)
+        //     save_places[j] = places[j];
     }
 }
 
