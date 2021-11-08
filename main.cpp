@@ -11,46 +11,46 @@ struct transition
     vector<int> output;
 };
 
-void print_reachable_marking(int *places, int size_places, transition *trans, int size_trans)
+void print_reachable_marking(int *places, int size_places, transition *trans, int size_trans, int index)
 {
-    int save_places[size_places];
-    for (int i = 0; i < size_places; i++)
+    // int save_places[size_places];
+    // for (int i = 0; i < size_places; i++)
+    // {
+    //     save_places[i] = places[i];
+    // }
+    // for (int i = 0; i < size_trans; i++)
+    // {
+    bool able = true;
+    for (int j = 0; j < trans[index].input.size(); j++)
     {
-        save_places[i] = places[i];
+        if (places[trans[index].input[j]] == 0)
+            able = false;
     }
-    for (int i = 0; i < size_trans; i++)
+    if (able)
     {
-        bool able = true;
-        for (int j = 0; j < trans[i].input.size(); j++)
+        for (int j = 0; j < trans[index].input.size(); j++)
         {
-            if (save_places[trans[i].input[j]] == 0)
-                able = false;
+            places[trans[index].input[j]] -= 1;
         }
-        if (able)
+        for (int j = 0; j < trans[index].output.size(); j++)
         {
-            for (int j = 0; j < trans[i].input.size(); j++)
-            {
-                save_places[trans[i].input[j]] -= 1;
-            }
-            for (int j = 0; j < trans[i].output.size(); j++)
-            {
-                save_places[trans[i].output[j]] += 1;
-            }
+            places[trans[index].output[j]] += 1;
         }
-        cout << "Reachable marking from firing transition[" << i << "]: [ ";
-        for (int j = 0; j < size_places; j++)
-        {
-            if (j == 0)
-                cout << save_places[j];
-            else
-            {
-                cout << ", " << save_places[j];
-            }
-        }
-        cout << " ]" << endl;
-        // for (int j = 0; j < size_places; j++)
-        //     save_places[j] = places[j];
     }
+    cout << "Reachable marking from firing transition[" << index << "]: [ ";
+    for (int j = 0; j < size_places; j++)
+    {
+        if (j == 0)
+            cout << places[j];
+        else
+        {
+            cout << ", " << places[j];
+        }
+    }
+    cout << " ]" << endl;
+    // for (int j = 0; j < size_places; j++)
+    //     save_places[j] = places[j];
+    //}
 }
 
 int main()
@@ -106,6 +106,21 @@ int main()
             cout << ", " << places[i];
     }
     cout << " ]" << endl;
-    print_reachable_marking(places, num_of_places, trans, num_of_trans);
+    cout << "Which transition you want to fire ?" << endl;
+    cout << "Press -1 to escape the firing" << endl;
+    while (true)
+    {
+        int index;
+        cin >> index;
+        if (index < 0)
+            break;
+        if (index >= num_of_trans)
+        {
+            cout << "Out of range of index of transitions" << endl;
+            break;
+        }
+        print_reachable_marking(places, num_of_places, trans, num_of_trans, index);
+    }
+    cout << "The end." << endl;
     return 0;
 }
